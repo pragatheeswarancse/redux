@@ -1,19 +1,28 @@
 import React from "react";
 import Navbar from "../component/navbar";
-import {DragDropContext, Droppable} from 'react-beautiful-dnd'
+import {useDispatch, useSelector} from 'react-redux';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import Link from 'next/link'
+
 export default function Home() {
-  const userDetail = [
-    {
-      name: 'Pragi',
-      gender: 'male',
-      email: 'kasipragi143@gmail.com',
-    },
-    {
-      name: 'Hari',
-      gender: 'male',
-      email: 'kasipragi143@gmail.com',
-    }
-  ]
+
+  const selector = useSelector(state => state.users)
+  
+  // const userDetail = [
+  //   {
+  //     name: 'Pragi',
+  //     gender: 'male',
+  //     email: 'kasipragi143@gmail.com',
+  //   },
+  //   {
+  //     name: 'Hari',
+  //     gender: 'male',
+  //     email: 'kasipragi143@gmail.com',
+  //   }
+  // ]
+  
+  
+
     return (
       <div>
       <Navbar />
@@ -44,10 +53,10 @@ export default function Home() {
                     </th>
                   </tr>
                 </thead>
+                {selector.length > 0 ? (selector.map((userDetails,index) => (
+                    <Link key={userDetails.name}  href={`/userdetail/${index+1}`}>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  
-                  {userDetail.map((userDetails) => (
-                    <tr className="sm:table-row" key={userDetails.name}>
+                    <tr className="sm:table-row">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="">
@@ -59,12 +68,20 @@ export default function Home() {
                         <div className="text-sm text-gray-900">{userDetails.gender}</div>
                       </td>
                       <td className="px-6 py-4 text-sm text-gray-500">{userDetails.email}</td>
-                      <td className="px-6 py-4 text-sm bg-red-500 text-white">Delete</td>
+                    
+                      <button className="px-6 py-4 text-sm bg-red-500 text-white pr-5">Delete</button>
                     </tr>
-                  ))}
-                 
-                </tbody>
-              </table>
+                   </tbody>
+                   </Link>
+                ))) : 
+                <div>
+                  <div className="flex justify-center pt-12 pl-24">
+                    <img className="w-24 pl-5" src="https://img-premium.flaticon.com/png/512/4508/premium/4508935.png?token=exp=1625131928~hmac=b30552cfbb09bd2298888423890eb879" alt="no data"/>
+                    </div>
+                    <p className="text-center pt-8">Please add new data<span className="text-red-500"> No user data found</span> </p>
+                </div>
+                  }
+</table>
             </div>
           </div>
         </div>

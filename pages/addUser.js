@@ -1,13 +1,26 @@
 import React, {useState, useEffect} from 'react';
 import NavbarGenral from '../component/navbargenral'
+import {useDispatch, useSelector, connect} from 'react-redux';
+import {addUser} from '../actions/action'
+import { Field, reduxForm, formValueSelector } from 'redux-form'
+import validators from '../component/validators';
 
-export default function AddUser() {
+export default function AddUser(props) {
+const { handleSubmit, pristine, reset, submitting } = props
 
+const formValidators = {
+  name: validators.required('firsname is not found'),
+  lastName: [validators.required('last name needed'), validators.maxLength(5)]
+}
+
+const dispatch = useDispatch()
+const selector = useSelector(state => state.users)
+console.log(selector)
 const [values, setValues] = useState({
   name:"",
   gender:"",
   email:"",
-  phone:"",
+  phonenumber:"",
   city:"",
   pincode:""
 })
@@ -18,19 +31,14 @@ const handleChange = (event) => {
   ...values,
   [event.target.name]: event.target.value,
   }));
-  setItem([...item])
   };
 console.log(values)
 
-useEffect(()=>{
-    const values = localStorage.getItem('values')
-    if(values){
-      setItem(JSON.parse(values))
-     }
-    },[])
-    useEffect( () => {
-      localStorage.setItem('values',JSON.stringify(item))
-    })
+
+const onUserAdd = (e) => {
+  e.preventDefault()
+  dispatch(addUser(values))
+}
 
 return(
   <div>
@@ -48,24 +56,23 @@ return(
           <p className="font-semibold text-lg">Name</p>
           <input
           name="name"
+          validate={formValidators.name}
           value={values.name}
           onChange={handleChange}
           className="border-none h-10 px-2 font-semibold py-1 w-96 rounded bg-gray-200"
-          type="text" />
+          type="text"
+          />
         </div>
         <div className="pt-7 flex">
           <div>
             <p className="font-semibold text-lg">gender</p>
-            <select
+            <input
               name="gender"
               value={values.gender}
               onChange={handleChange}
-              className="border-none h-10 px-2 font-semibold py-1 w-56 rounded bg-gray-200 px-2 "
-              type="text">
-                  <option value="male">Male</option>
-                  <option value="female">female</option>
-                  <option value="Rather to say">Rather to say</option>
-              </select>
+              className="border-none h-10 px-2 font-semibold py-1 w-56 rounded bg-gray-200 px-2"
+              type="gender"
+            />
           </div>
           <div className="pl-7">
             <p className="font-semibold text-lg">Email</p>
@@ -81,8 +88,8 @@ return(
         <div className="pt-7">
           <p className="font-semibold text-lg">Phone Number</p>
           <input
-            name="PhoneNumber"
-            value={values.PhoneNumber}
+            name="phonenumber"
+            value={values.phonenumber}
             onChange={handleChange}
             className="border-none h-10 px-2 font-semibold py-1 w-96 rounded bg-gray-200"
             type="tel"
@@ -102,15 +109,15 @@ return(
         <div className="pt-7">
           <p className="font-semibold text-lg">Pincode</p>
           <input
-            name="Pincode"
-            value={values.Pincode}
+            name="pincode"
+            value={values.pincode}
             onChange={handleChange}
             className="border-none h-10 px-2 font-semibold py-1 w-96 rounded bg-gray-200"
             type="text"
           />
         </div>
         <div className="pt-12">
-        <button type="submit" className="bg-indigo-600 px-8 py-2 font-bold text-lg text-white rounded">SUBMIT</button>
+        <button onClick={onUserAdd} className="bg-indigo-600 px-8 py-2 font-bold text-lg text-white rounded">SUBMIT</button>
         </div>
       </form>
     </div>

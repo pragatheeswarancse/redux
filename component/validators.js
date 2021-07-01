@@ -7,5 +7,5 @@ const validators = {
         return value && value.length > max ? `Must be ${max} characters or less` : undefined
       }
   }
-  
+
   export default validators;
